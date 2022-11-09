@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: cn-sac-app
-        image: marangelogit/sac-app:v1.0.0
+        image: marangelogit/gumanet:v1
         ports:
         - containerPort: 80
         env:
