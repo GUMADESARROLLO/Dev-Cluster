@@ -1,0 +1,14 @@
+RESOLVERLO CON MINIKUBE CON UN CLUSTER CON TRES NODOS
+
+
+docker network create --driver=bridge --subnet=192.168.1.0/24 --gateway=192.168.1.1 minikube
+
+minikube start --nodes 2 -p umk-dev --driver=docker --network=minikube  
+
+minikube addons enable metallb 
+
+minikube addons configure metallb
+
+minikube addons enable portainer 
+
+minikube addons enable ingress  

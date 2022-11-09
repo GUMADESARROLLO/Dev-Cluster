@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: importacion-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      role: importacion-app
+  template:
+    metadata:
+      labels:
+        role: importacion-app
+    spec:
+      containers:
+      - name: cn-importacion-app
+        image: marangelogit/sac-app:v1.0.0
+        ports:
+        - containerPort: 80
+        env:
+        - name: APP_KEY
+          value: base64:cUPmwHx4LXa4Z25HhzFiWCf7TlQmSqnt98pnuiHmzgY=
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: importacion-svc   
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    role: importacion-app
