@@ -8,17 +8,10 @@ spec:
   rules:
   - http:
       paths:
-      - path: /sac
+      - path: /gumanet
         pathType: Prefix
         backend:
           service:
             name: sac-svc
-            port:
-              number: 80
-      - path: /importacion
-        pathType: Prefix
-        backend:
-          service:
-            name: importacion-svc
             port:
               number: 80
