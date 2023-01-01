@@ -6,17 +6,17 @@ spec:
   replicas: 3
   selector:
     matchLabels:
-      app: mysql8
+      app: mysql-app
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app: mysql8
+        app: mysql-app
     spec:
       containers:
-      - image: mysql:8.0
-        name: mysql
+      - image: mysql:8.0.19
+        name: mysql-app
         env:
         - name: MYSQL_ROOT_PASSWORD
           value: .a7m1425.
@@ -29,7 +29,7 @@ spec:
         args: ["--default-authentication-plugin=mysql_native_password"]
         ports:
         - containerPort: 3306
-          name: mysql8
+          name: cn-mysql-app
         volumeMounts:
           - name: mysql-persistent-storage
             mountPath: /var/lib/mysql
@@ -45,7 +45,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: mysql-pv-claim
   labels:
-    app: mysql8
+    app: mysql-app
 spec:
   accessModes:
     - ReadWriteOnce
@@ -54,16 +54,16 @@ spec:
       storage: 5Gi #5 GB
 
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql8-svc
-  labels:
-    app: mysql8
+  name: mysql-svc
 spec:
-  ports:
-  - port: 3306
-    protocol: TCP
+  type: NodePort
   selector:
-    app: mysql8
+    app: mysql-app
+  ports:
+    - protocol: TCP
+      port: 3306
+      nodePort: 30036
+      targetPort: 3306

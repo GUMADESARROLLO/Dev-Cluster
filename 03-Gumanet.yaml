@@ -1,34 +1,50 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sac-app
+  name: gnet-app
 spec:
-  replicas: 3
+  replicas: 1
   selector:
     matchLabels:
-      role: sac-app
+      app: gnet-app
   template:
     metadata:
       labels:
-        role: sac-app
+        app: gnet-app
     spec:
       containers:
-      - name: cn-sac-app
-        image: marangelogit/gumanet:v1
+      - name: gnet-app
+        image: marangelogit/gumanet:v3
         ports:
-        - containerPort: 80
-        env:
-        - name: APP_KEY
-          value: base64:cUPmwHx4LXa4Z25HhzFiWCf7TlQmSqnt98pnuiHmzgY=
+          - containerPort: 80
 ---
-
 apiVersion: v1
 kind: Service
 metadata:
-  name: sac-svc   
-spec:  
-  ports:
-  - port: 80
-    targetPort: 80
+  name: gnet-svc
+spec:
+  type: LoadBalancer
   selector:
-    role: sac-app
+    app: gnet-app
+  ports:
+  - port: 8080
+    targetPort: 80
+---
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-app
+  annotations :
+    kubernetes.io/ingress.class: "nginx"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /?(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: gnet-svc
+            port:
+              number: 8080
